@@ -25,19 +25,16 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUp(props) {
     const classes = useStyles();
-    const { setGlobalUserName = () => {} } = props;
+    const { setGlobalUserData } = props;
     const [userName, setUserName] = useState('');
     const [ userDidRegister, setDidRegister ] = useState(false);
     const [ errorsData, setErrors ] = useState({ context: 'Please enter another user name, that one is already taken.', show: false});
 
     const handleClick = () => {
-        axios.post(
-            `http://${process.env.REACT_APP_BACKEND_URL}/api/register/`,
-            {
-                'user_id': userName,
-            }
+        axios.get(
+            `http://${process.env.REACT_APP_BACKEND_URL}/signup/${userName}`
         ).then(res => {
-            setGlobalUserName(userName);
+            setGlobalUserData(userName, res.data);
             setDidRegister(true);
         })
         .catch(err => {
@@ -49,6 +46,7 @@ export default function SignUp(props) {
         });
     }
 
+    
     return (
         <div>
             <NavBar

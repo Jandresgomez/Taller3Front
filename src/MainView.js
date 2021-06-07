@@ -26,7 +26,7 @@ function MainView() {
         <Router>
             <Switch>
                 <Route path="/register">
-                    <SignUp setGlobalUserName={name => setUserName(name)} />
+                    <SignUp setGlobalUserData={(name, data)=> { setUserName(name); setUserData(data) }} />
                 </Route>
                 {userName !== '' &&
                     (<Route path="/discover">
