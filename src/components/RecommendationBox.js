@@ -104,7 +104,7 @@ function MovieContainer(props) {
                     <div style={{ maxWidth: "20%", maxHeight: "60%" }}>
                         <Movie
                             movieTitle={movieData['title']}
-                            numReviews={movieData.ready ? (movieData.movie['reviews_list'] ? movieData.movie['reviews_list'].length : 0) : ''}
+                            numReviews={movieData.ready ? (movieData['reviews_list'] ? movieData['reviews_list'].length : 0) : ''}
                             showLikeButton={true}
                             showDislikeButton={true}
                         />
@@ -113,16 +113,16 @@ function MovieContainer(props) {
                         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', alignContent: 'center', width: '100%' }}>
                             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignContent: 'center' }}>
                                 <h3>Información basica</h3>
-                                {movieData.movie['year'] ? (<p>Lanzamiento: {movieData.movie['year']}</p>) : undefined}
-                                {movieData.movie['country'] ? (<p>Origen: {movieData.movie['country']}</p>) : undefined}
+                                {movieData['year'] ? (<p>Lanzamiento: {movieData['year']}</p>) : undefined}
+                                {movieData['country'] ? (<p>Origen: {movieData['country']}</p>) : undefined}
                             </div>
                             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignContent: 'center' }}>
                                 <h3>Actores</h3>
-                                {movieData.movie['actors'].map((el) => (<p>{el}</p>))}
+                                {movieData['actors'].map((el) => (<p>{el}</p>))}
                             </div>
                             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignContent: 'center' }}>
                                 <h3>Generos</h3>
-                                {movieData.movie['genres'].map((el) => (<p>{el}</p>))}
+                                {movieData['genres'].map((el) => (<p>{el}</p>))}
                             </div>
                         </div>
                     </div>
