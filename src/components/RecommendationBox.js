@@ -96,6 +96,10 @@ function MovieContainer(props) {
     })
 
     const handleLikeMovie = (movieId, userId) => {
+        setContainerState(prevState => ({
+            ...prevState,
+            disableButtons: true,
+        }));
         axios.post(
             `http://${process.env.REACT_APP_BACKEND_URL}/like`, {
             userId: userId,
@@ -112,6 +116,10 @@ function MovieContainer(props) {
     }
 
     const handleRemoveMovie = (movieId, userId) => {
+        setContainerState(prevState => ({
+            ...prevState,
+            disableButtons: true,
+        }));
         axios.post(
             `http://${process.env.REACT_APP_BACKEND_URL}/dislike`, {
             userId: userId,
