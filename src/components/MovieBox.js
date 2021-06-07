@@ -75,7 +75,7 @@ export default function MovieBox(props) {
                                         color="primary"
                                         aria-label="ThumbUpIcon"
                                         onClick={() => handleDislike()}
-                                        className={disableButtons ? classes.iconButton : undefined}
+                                        className={disableButtons ? undefined : classes.iconButton}
                                     >
                                         <BlockIcon />
                                     </IconButton>
