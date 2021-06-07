@@ -7,13 +7,13 @@ import NavBar from './NavBar.js'
 
 export default function WhatDoYouLike(props) {
     const { userName } = props;
-    const [topArtists, setTopArtists] = useState({ ready: false, data: [] });
+    const [topMovies, setTopMovies] = useState({ ready: false, data: [] });
     const [allowContinue, setAllow] = useState(false)
 
-    const fetchArtists = () => {
-        axios.get(`http://${process.env.REACT_APP_BACKEND_URL}/api/top/`)
+    const fetchTopMovies = () => {
+        axios.get(`http://${process.env.REACT_APP_BACKEND_URL}/top`)
             .then(res => {
-                setTopArtists({
+                setTopMovies({
                     ready: true,
                     data: res.data['top'],
                 })
@@ -22,12 +22,12 @@ export default function WhatDoYouLike(props) {
     }
 
     useEffect(() => {
-        fetchArtists();
+        fetchTopMovies();
     }, []);
 
     const itemWidth = '250px';
     const itemsPerRow = 5;
-    const placeholders = new Array(itemsPerRow - (topArtists.data.length % itemsPerRow)).fill(0);
+    const placeholders = new Array(itemsPerRow - (topMovies.data.length % itemsPerRow)).fill(0);
     return (
         <div>
             <NavBar
@@ -52,12 +52,13 @@ export default function WhatDoYouLike(props) {
                 </div>
 
                 <div style={{ display: "flex", flexWrap: "wrap", justifyContent: 'center' }}>
-                    {topArtists.ready && topArtists.data.reduce((accumulator, artist, index) => {
+                    {topMovies.ready && topMovies.data.reduce((accumulator, movie, index) => {
                         const el = (
                             <div style={{ flexGrow: "1", padding: '20px 0px 20px 0px', maxWidth: itemWidth, margin: '0px 20px' }}>
-                                <ArtistTopWrapper
-                                    aid={artist['artist_id']}
-                                    plays={artist['play_sum']}
+                                <MovieTopWrapper
+                                    movieId={movie['_id']}
+                                    movieTitle={movie['title']}
+                                    reviews={movie['reviews_list'] ? movie['reviews_list'].length : 0}
                                     userName={userName}
                                     onAction={() => setAllow(true)}
                                 />
@@ -82,68 +83,59 @@ export default function WhatDoYouLike(props) {
     );
 }
 
-function ArtistTopWrapper(props) {
-    const { aid, plays, userName, onAction } = props;
-    const [artistName, setName] = useState('Cargando...');
-    const [artistState, setState] = useState({
+function MovieTopWrapper(props) {
+    const { movieId, movieTitle, numReviews, userName, onAction } = props;
+    const [movieState, setState] = useState({
         paperAsPurple: false,
         paperAsRed: false,
         disableButtons: false,
     });
 
-    const handleDislikeArtist = (aid, userName) => {
+    const handleDislikeMovie = (movieId, userName) => {
+        setState({
+            paperAsPurple: false,
+            paperAsRed: true,
+            disableButtons: true,
+        });
         axios.post(
-            `http://${process.env.REACT_APP_BACKEND_URL}/api/dislike/`, {
-            user_id: userName,
-            artist_id: aid,
+            `http://${process.env.REACT_APP_BACKEND_URL}/dislike`, {
+            userId: userName,
+            movieId: movieId,
         })
             .then(res => {
-                setState({
-                    paperAsPurple: false,
-                    paperAsRed: true,
-                    disableButtons: true,
-                });
                 onAction();
             })
             .catch(err => console.log(err))
     };
 
-    const handleLikeArtist = (aid, userName) => {
+    const handleLikeMovie = (movieId, userName) => {
+        setState({
+            paperAsPurple: true,
+            paperAsRed: false,
+            disableButtons: true,
+        });
         axios.post(
-            `http://${process.env.REACT_APP_BACKEND_URL}/api/like/`, {
-            user_id: userName,
-            artist_id: aid,
+            `http://${process.env.REACT_APP_BACKEND_URL}/like`, {
+            userId: userName,
+            movieId: movieId,
         })
             .then(res => {
-                setState({
-                    paperAsPurple: true,
-                    paperAsRed: false,
-                    disableButtons: true,
-                });
                 onAction();
             })
             .catch(err => console.log(err))
     };
-
-    useEffect(() => {
-        axios.get(`http://${process.env.REACT_APP_BACKEND_URL}/api/artist/${aid}/`)
-            .then(res => {
-                setName(res.data['artist_name']);
-            })
-            .catch(err => console.log(err))
-    }, [])
 
     return (
         <Movie
-            paperAsRed={artistState.paperAsRed}
-            paperAsPurple={artistState.paperAsPurple}
-            disableButtons={artistState.disableButtons}
-            artistName={artistName}
-            numListens={plays}
+            paperAsRed={movieState.paperAsRed}
+            paperAsPurple={movieState.paperAsPurple}
+            disableButtons={movieState.disableButtons}
+            movieTitle={movieTitle}
+            numReviews={numReviews}
             showLikeButton={true}
-            handleLike={() => handleLikeArtist(aid, userName)}
+            handleLike={() => handleLikeMovie(movieId, userName)}
             showDislikeButton={true}
-            handleDislike={() => handleDislikeArtist(aid, userName)}
+            handleDislike={() => handleDislikeMovie(movieId, userName)}
         />
     )
 };

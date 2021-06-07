@@ -5,13 +5,18 @@ import NavBar from './NavBar.js';
 
 export default function HistoryList(props) {
     const { userName, logout = () => { } } = props;
-    const [historyData, setHistory] = useState({ movies: [] });
+    const [historyData, setHistory] = useState({ movies: [], ready: false, });
 
     useEffect(() => {
+        setHistory(prevState => ({
+            ...prevState,
+            ready: false,
+        }));
         axios.get(`http://${process.env.REACT_APP_BACKEND_URL}/history/${userName}`)
             .then(res => {
                 setHistory({
-                    movies: res.data
+                    movies: res.data,
+                    ready: true,
                 });
             })
             .catch(err => console.log(err));
