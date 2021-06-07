@@ -56,12 +56,20 @@ export default function MovieBox(props) {
                         <label style={{ width: "100%", fontSize: '1em' }}>{numReviews == 1 ? `${numReviews} review` : `${numReviews} reviews`}</label>
                     </div>
                     <div style={{ justifyContent: "center", display: "flex", alignItems: "center", padding: '5px 0px 5px 0px', width: "100%" }}>
+                        {showLikeButton && (
+                            <div style={{ padding: '0px 0px 10px 0px' }}>
+                                <IconButton
+                                    disabled={disableButtons}
+                                    color="primary"
+                                    aria-label="dislike"
+                                    onClick={() => handleLike()}>
+                                    <ThumbUpIcon />
+                                </IconButton>
+                            </div>
+                        )}
                         {showDislikeButton && (
                             <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignContent: 'center' }}>
-                                <p style={{ fontWeight: 700 }}>
-                                    Remove
-                                </p>
-                                <div style={{ padding: '0px 0px 10px 5px' }}>
+                                <div style={{ padding: '0px 0px 10px 0px' }}>
                                     <IconButton
                                         disabled={disableButtons}
                                         color="primary"
@@ -72,17 +80,6 @@ export default function MovieBox(props) {
                                         <BlockIcon />
                                     </IconButton>
                                 </div>
-                            </div>
-                        )}
-                        {showLikeButton && (
-                            <div style={{ padding: '0px 0px 10px 0px' }}>
-                                <IconButton
-                                    disabled={disableButtons}
-                                    color="primary"
-                                    aria-label="dislike"
-                                    onClick={() => handleLike()}>
-                                    <ThumbUpIcon />
-                                </IconButton>
                             </div>
                         )}
                         {showDiscoverButton && (
