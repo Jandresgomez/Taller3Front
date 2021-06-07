@@ -150,7 +150,7 @@ function MovieContainer(props) {
                     <div style={{ maxWidth: "20%", maxHeight: "60%" }}>
                         <Movie
                             movieTitle={movieData['title']}
-                            numReviews={movieData.ready ? (movieData['reviews_list'] ? movieData['reviews_list'].length : 0) : ''}
+                            numReviews={movieData['reviews_list'] ? movieData['reviews_list'].length : 0}
                             showLikeButton={true}
                             showDislikeButton={true}
                             disableButtons={cardData.disableButtons}
