@@ -22,6 +22,13 @@ export default function HistoryList(props) {
             .catch(err => console.log(err));
     }, [])
 
+    const handleDislike = movieId => {
+        setHistory({
+            movies: historyData.movies.filter(el => el['_id'] != movieId),
+            ready: true,
+        });
+    }
+
     const itemWidth = '250px';
     const itemsPerRow = 5;
     const placeholders = new Array(itemsPerRow - (historyData.movies.length % itemsPerRow)).fill(0);
@@ -36,7 +43,7 @@ export default function HistoryList(props) {
             />
             <div style={{ display: "flex", alignItems: "center", flexDirection: "column", margin: '50px', flexWrap: "wrap" }}>
                 <label style={{ fontSize: '3em', padding: '20px 0px 20px 0px' }}> Las peliculas que has visto </label>
-                <div style={{ display: "flex", flexWrap: "wrap", justifyContent: 'center', flexDirection:'row' }}>
+                <div style={{ display: "flex", flexWrap: "wrap", justifyContent: 'center', flexDirection: 'row' }}>
                     {historyData.movies.reduce((accumulator, movie, index) => {
 
                         const el = (
@@ -45,6 +52,7 @@ export default function HistoryList(props) {
                                     movieId={movie['_id']}
                                     movieTitle={movie['title']}
                                     reviews={movie['reviews_list'] ? movie['reviews_list'].length : 0}
+                                    onDislike={(id) => handleDislike(id)}
                                     userName={userName}
                                 />
                             </div>
@@ -69,16 +77,17 @@ export default function HistoryList(props) {
 }
 
 function MovieHistoryWrapper(props) {
-    const { movieId, movieTitle, reviews, userName } = props;
-    
-    const handleDislikeArtist = (aid, userName) => {
+    const { movieId, movieTitle, reviews, userName, onDislike } = props;
+
+    const handleDislikeArtist = (movieId, userName) => {
         axios.post(
-            `http://${process.env.REACT_APP_BACKEND_URL}/api/dislike/`, {
-            user_id: userName,
-            artist_id: aid,
+            `http://${process.env.REACT_APP_BACKEND_URL}/dislike`, {
+            userId: userName,
+            movieId: movieId,
         })
             .then(res => {
                 console.log(res)
+                onDislike(movieId)
             })
             .catch(err => console.log(err))
     };
@@ -88,7 +97,7 @@ function MovieHistoryWrapper(props) {
             movieTitle={movieTitle}
             numReviews={reviews}
             showDislikeButton={true}
-            handleDislike={() => handleDislikeArtist("", userName)}
+            handleDislike={() => handleDislikeArtist(movieId, userName)}
         />
     )
 };

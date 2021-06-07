@@ -58,7 +58,7 @@ export default function WhatDoYouLike(props) {
                                 <MovieTopWrapper
                                     movieId={movie['_id']}
                                     movieTitle={movie['title']}
-                                    reviews={movie['reviews_list'] ? movie['reviews_list'].length : 0}
+                                    numReviews={movie['reviews_list'] ? movie['reviews_list'].length : 0}
                                     userName={userName}
                                     onAction={() => setAllow(true)}
                                 />
