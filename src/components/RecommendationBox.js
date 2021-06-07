@@ -141,7 +141,11 @@ function MovieContainer(props) {
                             </div>
                             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignContent: 'center' }}>
                                 <h3>Actores</h3>
-                                {movieData['actors'].map((el) => (<p>{el}</p>))}
+                                {movieData['actors'].map((el, index) => {
+                                    if (index < 5) {
+                                        return (<p>{el}</p>)
+                                    }
+                                })}
                             </div>
                             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignContent: 'center' }}>
                                 <h3>Generos</h3>
