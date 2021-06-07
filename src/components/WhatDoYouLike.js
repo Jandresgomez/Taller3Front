@@ -15,7 +15,7 @@ export default function WhatDoYouLike(props) {
             .then(res => {
                 setTopMovies({
                     ready: true,
-                    data: res.data['top'],
+                    data: res.data,
                 })
             })
             .catch(err => console.log(err));
