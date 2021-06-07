@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { Button } from '@material-ui/core';
 import { Redirect } from 'react-router';
 import axios from 'axios';
+import { Movie } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -14,6 +15,12 @@ const useStyles = makeStyles((theme) => ({
             width: '80ch',
         },
     },
+    movieIcon: {
+        '&.MuiSvgIcon-root': {
+            fontSize: "10rem",
+            color: "#b53f3f",
+        }
+    }
 }));
 
 export default function SignUp(props) {
@@ -55,7 +62,7 @@ export default function SignUp(props) {
                         <label style={{ width: "100%", fontSize: '3em' }}> Sign up</label>
                     </div>
                     <div style={{ padding: '25px 50px 25px 50px' }}>
-                        <img src={process.env.PUBLIC_URL + '/musical-note.png'} width="15%" alt='musica' />
+                        <Movie className={classes.movieIcon}/>
                     </div>
                     <div style={{ flexDirection: "column", justifyContent: "center", display: "flex", alignItems: "center", width: "100%", padding: '25px 50px 25px 50px' }}>
                         <label style={{ width: "100%", fontSize: '3em' }}> Ingresa un usuario para la plataforma</label>

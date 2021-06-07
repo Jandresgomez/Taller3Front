@@ -59,7 +59,7 @@ export default function Recommendation(props) {
     return (
         <div>
             <NavBar
-                labels={['INICIO', 'Lo que he escuchado']}
+                labels={['INICIO', 'Lo que he visto']}
                 showSearchButton={true}
                 buttonRedirections={['/home', '/history']}
                 showLogoutButton={true}

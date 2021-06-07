@@ -6,6 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import { useState } from 'react';
 import { Button } from '@material-ui/core';
 import { Redirect } from 'react-router';
+import { Movie } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -14,6 +15,12 @@ const useStyles = makeStyles((theme) => ({
             width: '80ch',
         },
     },
+    movieIcon: {
+        '&.MuiSvgIcon-root': {
+            fontSize: "10rem",
+            color: "#b53f3f",
+        }
+    }
 }));
 
 export default function SignIn(props) {
@@ -31,7 +38,6 @@ export default function SignIn(props) {
             .then(res => {
                 setShowRedirect(true)
                 setGlobalUserData(userName, res.data)
-                console.log(res.data)
             })
             .catch(err => {
                 console.log(err)
@@ -53,10 +59,10 @@ export default function SignIn(props) {
                     <label style={{ width: "100%", fontSize: '3em' }}> Sign in</label>
                 </div>
                     <div style={{padding: '25px 50px 25px 50px'}}>
-                        <img src={process.env.PUBLIC_URL + '/musical-note.png'} width="15%" alt='musica' />
+                        <Movie className={classes.movieIcon}/>
                     </div>
                     <div style={{ flexDirection: "column", justifyContent: "center", display: "flex", alignItems: "center", width: "100%", padding: '25px 50px 25px 50px'}}>
-                        <label style={{ width: "100%", fontSize: '3em' }}> Ingresa tu usuario para escuchar tu musica</label>
+                        <label style={{ width: "100%", fontSize: '3em' }}> Ingresa tu usuario para ver tus peliculas</label>
                         <div style={{ flexBasis: "100%", height: "100px", padding: '25px 50px 25px 50px' }}> </div>
                         <form className={classes.root} noValidate autoComplete="off" onSubmit={(e) => e.preventDefault()}>
                             <TextField value={userName} onChange={(e) => setUserName(e.target.value)} id="outlined-basic" label="Usuario" variant="outlined" />

@@ -1,25 +1,39 @@
-import { Button } from '@material-ui/core';
+import react from 'react';
+import { Button, makeStyles } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
+import BlockIcon from '@material-ui/icons/Block';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
-import ThumbDownIcon from '@material-ui/icons/ThumbDown';
+
+const useStyles = makeStyles((theme) => ({
+    button: {
+        '&.MuiButton-containedPrimary': {
+            backgroundColor: '#b53f3f',
+        },
+    },
+    iconButton: {
+        '&.MuiIconButton-colorPrimary': {
+            color: '#b53f3f',
+        }
+    }
+}));
 
 export default function MovieBox(props) {
     const {
         paperAsRed = false,
         paperAsPurple = false,
         disableButtons = false,
-        artistName,
-        numListens,
+        movieTitle,
+        numReviews,
         showLikeButton = false,
         showDislikeButton = false,
-        handleLike = () => {},
-        handleDislike = () => {},
+        handleLike = () => { },
+        handleDislike = () => { },
         showDiscoverButton = false,
-        listensTitle,
         onClickDiscover = () => { },
     } = props;
 
+    const classes = useStyles();
     const defineColor = () => {
         if (paperAsRed) return '#ffb5b5'
         if (paperAsPurple) return '#b5b9ff'
@@ -32,28 +46,41 @@ export default function MovieBox(props) {
                 backgroundColor: defineColor()
             }}>
                 <div>
-                    <img src={process.env.PUBLIC_URL + '/micro.jpg'} width="100%" alt='Artist' />
+                    <img src={process.env.PUBLIC_URL + '/movies.png'} width="100%" alt='Movie' />
                 </div>
                 <div>
                     <div style={{ justifyContent: "left", display: "flex", alignItems: "left", alignContent: "space-between", padding: '5px 0px 5px 0px' }}>
-                        <label style={{ width: "100%", fontSize: '1em' }}>Artist: </label>
-                        <label style={{ width: "100%", fontSize: '1em' }}>{artistName}</label>
+                        <label style={{ width: "100%", fontSize: '1em' }}>{movieTitle}</label>
                     </div>
                     <div style={{ justifyContent: "center", display: "flex", alignItems: "center", padding: '5px 0px 10px 10px' }}>
-                        <label style={{ width: "100%", fontSize: '1em' }}> {listensTitle ? listensTitle : 'Escuchado:'} </label>
-                        <label style={{ width: "100%", fontSize: '1em' }}>{numListens == 1? `${numListens} vez` : `${numListens} veces`}</label>
+                        <label style={{ width: "100%", fontSize: '1em' }}>{numReviews == 1 ? `${numReviews} review` : `${numReviews} reviews`}</label>
                     </div>
                     <div style={{ justifyContent: "center", display: "flex", alignItems: "center", padding: '5px 0px 5px 0px', width: "100%" }}>
                         {showDislikeButton && (
-                            <div style={{ padding: '0px 0px 10px 0px' }}>
-                                <IconButton disabled={disableButtons} color="primary" aria-label="ThumbUpIcon" onClick={() => handleDislike()}>
-                                    <ThumbDownIcon />
-                                </IconButton>
+                            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignContent: 'center' }}>
+                                <p style={{ fontWeight: 700 }}>
+                                    Remove
+                                </p>
+                                <div style={{ padding: '0px 0px 10px 5px' }}>
+                                    <IconButton
+                                        disabled={disableButtons}
+                                        color="primary"
+                                        aria-label="ThumbUpIcon"
+                                        onClick={() => handleDislike()}
+                                        className={classes.iconButton}
+                                    >
+                                        <BlockIcon />
+                                    </IconButton>
+                                </div>
                             </div>
                         )}
                         {showLikeButton && (
                             <div style={{ padding: '0px 0px 10px 0px' }}>
-                                <IconButton disabled={disableButtons} color="primary" aria-label="ThumbUpIcon" onClick={() => handleLike()}>
+                                <IconButton
+                                    disabled={disableButtons}
+                                    color="primary"
+                                    aria-label="dislike"
+                                    onClick={() => handleLike()}>
                                     <ThumbUpIcon />
                                 </IconButton>
                             </div>
@@ -64,6 +91,7 @@ export default function MovieBox(props) {
                                     disabled={disableButtons}
                                     color='primary'
                                     variant='contained'
+                                    className={classes.button}
                                     onClick={() => onClickDiscover()}
                                 >
                                     VER MÁS

@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import SignIn from './components/SignIn'
 import SignUp from './components/SignUp'
-import ListenedList from './components/ListenedList'
+import HistoryList from './components/HistoryList'
 import DiscoverMovies from './components/DiscoverMovies'
 import RecommendationBox from './components/RecommendationBox'
-import DiscoverSongs from './components/DiscoverSongs'
+import MovieDetails from './components/MovieDetails'
 import {
     BrowserRouter as Router,
     Switch,
@@ -38,11 +38,11 @@ function MainView() {
                     </Route>)}
                 {userName !== '' &&
                     (<Route path="/history">
-                        <ListenedList userName={userName} logout={logout} />
+                        <HistoryList userName={userName} logout={logout} />
                     </Route>)}
                 {userName !== '' &&
-                    (<Route path="/detail/:aid">
-                        <DiscoverSongs userName={userName} logout={logout} />
+                    (<Route path="/detail/:movieId">
+                        <MovieDetails userName={userName} logout={logout} />
                     </Route>)}
                 {userName !== '' &&
                     (<Route path="/search">

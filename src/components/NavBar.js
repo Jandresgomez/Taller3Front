@@ -27,6 +27,9 @@ const useStyles = makeStyles((theme) => ({
     height: '80px'
   },
   customBar: {
+    '&.MuiAppBar-colorPrimary': {
+      backgroundColor: '#b53f3f',
+    },
     height: '80px'
   }
 }));
@@ -41,7 +44,7 @@ export default function ButtonAppBar(props) {
       <AppBar position="static" className={classes.customBar}>
         <Toolbar>
           <Typography variant="h2" className={classes.title}>
-            MyMusic.io
+            MiCartelera.io
           </Typography>
           <div style={{ display: 'flex', flexDirection: "row" }}>
             {labels.map((buttonName, index) => (

@@ -1,3 +1,4 @@
+import react from 'react';
 import NavBar from './NavBar.js';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
@@ -6,7 +7,7 @@ import Movie from './MovieBox.js'
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Redirect } from 'react-router';
-
+import MoviesGrid from './MoviesGrid.js';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -19,6 +20,9 @@ const useStyles = makeStyles((theme) => ({
         '& > *': {
             margin: theme.spacing(1),
             width: '100%',
+        },
+        '&.MuiButton-containedPrimary': {
+            backgroundColor: '#b53f3f',
         },
     },
 }));
@@ -60,15 +64,10 @@ export default function DiscoverMovies(props) {
         updateSearch('');
     }, []);
 
-
-    const itemWidth = '250px';
-    const itemsPerRow = 5;
-    const placeholders = new Array(itemsPerRow - (searchData.results.length%itemsPerRow)).fill(0);
-
     return (
         <div>
             <NavBar
-                labels={['INICIO', 'Lo que he escuchado']}
+                labels={['INICIO', 'Lo que he visto']}
                 buttonRedirections={['/home', '/history']}
                 showLogoutButton={true}
                 logoutCallback={logout}
@@ -76,7 +75,7 @@ export default function DiscoverMovies(props) {
             />
 
             <div style={{ justifyContent: "center", display: "flex", alignItems: "center", padding: '50px 20px 20px 20px' }}>
-                <label style={{ fontSize: '3em', padding: '20px 0px 20px 0px' }}> ¿Qué artista quieres escuchar hoy?</label>
+                <label style={{ fontSize: '3em', padding: '20px 0px 20px 0px' }}> ¿Qué pelicula quieres ver hoy?</label>
                 <div style={{ width: "80%", flexDirection: "column" }}>
                     <form className={classes.root} noValidate autoComplete="off" onSubmit={(e) => e.preventDefault()}>
                         <TextField value={searchVal} onChange={e => setSearchVal(e.target.value)} id="outlined-basic" label="Nombre de la pelicula" variant="outlined" />
@@ -86,40 +85,10 @@ export default function DiscoverMovies(props) {
                     <Button onClick={() => handleClick()} disabled={!searchData.ready} variant="contained" color="primary" className={classes.button}> Buscar </Button>
                 </div>
             </div>
-            <div style={{ display: "flex", alignItems: "center", flexDirection: "column", margin: '50px', flexWrap: "wrap" }}>
-                <div style={{ display: "flex", flexWrap: "wrap", justifyContent: 'center' }}>
-                    {!searchData.ready && (
-                        <div>
-                            <h1>Cargando...</h1>
-                        </div>
-                    )}
-                    {searchData.ready && searchData.results.reduce((accumulator, artist, index) => {
-
-                        const el = (
-                            <div style={{ flexGrow: "1", padding: '20px 0px 20px 0px', maxWidth: itemWidth, margin: '0px 20px' }}>
-                                <Movie
-                                    artistName={artist['artist_name']}
-                                    numListens={artist['play_total']}
-                                    showDiscoverButton={true}
-                                    onClickDiscover={() => handleDiscover(artist['artist_id'])}
-                                />
-                            </div>
-                        );
-                        const el2 = (<div style={{ flexBasis: "100%", height: "40px" }}> </div>)
-
-                        if ((index + 1) % itemsPerRow === 0) {
-                            accumulator.push(el, el2);
-                        } else {
-                            accumulator.push(el);
-                        }
-                        return accumulator
-                    }, []
-                    )}
-                    {searchData.ready && placeholders.length < itemsPerRow && placeholders.map(() => (
-                        <div style={{ flexGrow: "1", padding: '20px 0px 20px 0px', maxWidth: itemWidth, margin: '0px 20px' }}></div>
-                    ))}
-                </div>
-            </div>
+            <MoviesGrid
+                searchData={searchData}
+                handleDiscover={handleDiscover}
+            />
             {redirectToArtist.show && (
                 <Redirect to={`/detail/${redirectToArtist.aid}`} />
             )}

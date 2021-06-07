@@ -3,17 +3,15 @@ import axios from 'axios';
 import Movie from './MovieBox.js';
 import NavBar from './NavBar.js';
 
-
-
-export default function ListenedList(props) {
+export default function HistoryList(props) {
     const { userName, logout = () => { } } = props;
-    const [historyData, setHistory] = useState({ artists: [] });
+    const [historyData, setHistory] = useState({ movies: [] });
 
     useEffect(() => {
-        axios.get(`http://${process.env.REACT_APP_BACKEND_URL}/api/history/${userName}/`)
+        axios.get(`http://${process.env.REACT_APP_BACKEND_URL}/history/${userName}`)
             .then(res => {
                 setHistory({
-                    artists: res.data['history']
+                    movies: res.data
                 });
             })
             .catch(err => console.log(err));
@@ -21,28 +19,28 @@ export default function ListenedList(props) {
 
     const itemWidth = '250px';
     const itemsPerRow = 5;
-    const placeholders = new Array(itemsPerRow - (historyData.artists.length % itemsPerRow)).fill(0);
+    const placeholders = new Array(itemsPerRow - (historyData.movies.length % itemsPerRow)).fill(0);
     return (
         <div>
             <NavBar
-                labels={['INICIO', 'Lo que he escuchado']}
+                labels={['INICIO', 'Lo que he visto']}
                 showSearchButton={true}
                 buttonRedirections={['/home', '/history']}
                 showLogoutButton={true}
                 logoutCallback={logout}
             />
             <div style={{ display: "flex", alignItems: "center", flexDirection: "column", margin: '50px', flexWrap: "wrap" }}>
-                <label style={{ fontSize: '3em', padding: '20px 0px 20px 0px' }}> Los artistas que has escuchado </label>
+                <label style={{ fontSize: '3em', padding: '20px 0px 20px 0px' }}> Las peliculas que has visto </label>
                 <div style={{ display: "flex", flexWrap: "wrap", justifyContent: 'center', flexDirection:'row' }}>
-                    {historyData.artists.reduce((accumulator, artist, index) => {
+                    {historyData.movies.reduce((accumulator, movie, index) => {
 
                         const el = (
                             <div style={{ flexGrow: "1", padding: '20px 0px 20px 0px', maxWidth: itemWidth, margin: '0px 20px' }}>
-                                <ArtistHistoryWrapper
-                                    aid={artist['artist_id']}
-                                    plays={artist['play_count']}
+                                <MovieHistoryWrapper
+                                    movieId={movie['_id']}
+                                    movieTitle={movie['title']}
+                                    reviews={movie['reviews_list'] ? movie['reviews_list'].length : 0}
                                     userName={userName}
-                                    isLiked={artist['liked']}
                                 />
                             </div>
                         );
@@ -65,22 +63,9 @@ export default function ListenedList(props) {
     );
 }
 
-function ArtistHistoryWrapper(props) {
-    const { aid, plays, userName, isLiked } = props;
-    const [artistName, setName] = useState('Cargando...');
-    const [artistState, setState] = useState({
-        paperAsPurple: isLiked,
-        paperAsRed: !isLiked,
-    })
-
-    useEffect(() => {
-        axios.get(`http://${process.env.REACT_APP_BACKEND_URL}/api/artist/${aid}/`)
-            .then(res => {
-                setName(res.data['artist_name']);
-            })
-            .catch(err => console.log(err))
-    }, [])
-
+function MovieHistoryWrapper(props) {
+    const { movieId, movieTitle, reviews, userName } = props;
+    
     const handleDislikeArtist = (aid, userName) => {
         axios.post(
             `http://${process.env.REACT_APP_BACKEND_URL}/api/dislike/`, {
@@ -88,40 +73,17 @@ function ArtistHistoryWrapper(props) {
             artist_id: aid,
         })
             .then(res => {
-                setState({
-                    paperAsPurple: false,
-                    paperAsRed: true,
-                });
-            })
-            .catch(err => console.log(err))
-    };
-
-    const handleLikeArtist = (aid, userName) => {
-        axios.post(
-            `http://${process.env.REACT_APP_BACKEND_URL}/api/like/`, {
-            user_id: userName,
-            artist_id: aid,
-        })
-            .then(res => {
-                setState({
-                    paperAsPurple: true,
-                    paperAsRed: false,
-                });
+                console.log(res)
             })
             .catch(err => console.log(err))
     };
 
     return (
         <Movie
-            paperAsRed={artistState.paperAsRed}
-            paperAsPurple={artistState.paperAsPurple}
-            artistName={artistName}
-            numListens={plays}
-            showLikeButton={true}
-            listensTitle='Escuchado por ti:'
-            handleLike={() => handleLikeArtist(aid, userName)}
+            movieTitle={movieTitle}
+            numReviews={reviews}
             showDislikeButton={true}
-            handleDislike={() => handleDislikeArtist(aid, userName)}
+            handleDislike={() => handleDislikeArtist("", userName)}
         />
     )
 };
