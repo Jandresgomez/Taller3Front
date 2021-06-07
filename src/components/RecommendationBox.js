@@ -47,7 +47,12 @@ export default function Recommendation(props) {
         ).then(res => {
             fetchData();
         })
-            .catch(err => console.log(err))
+            .catch(err => {
+                setData(prevState => ({
+                    ...prevState,
+                    ready: true,
+                }));
+            })
     }
 
     return (
@@ -64,7 +69,7 @@ export default function Recommendation(props) {
                 <div style={{ display: "flex", padding: '50px 20px 20px 20px' }}>
                     <div style={{ flexGrow: "1" }}>
                         <div style={{ display: "flex", justifyContent: "start" }}>
-                            <label style={{ fontSize: '2em', width: "100%", textAlign: 'left', alignSelf: 'stretch' }}>Basado en lo que has escuchado, te recomendamos: </label>
+                            <label style={{ fontSize: '2em', width: "100%", textAlign: 'left', alignSelf: 'stretch' }}>Basado en lo que has visto, te recomendamos: </label>
                         </div>
                     </div>
                     <div style={{ flexGrow: "1" }}>
