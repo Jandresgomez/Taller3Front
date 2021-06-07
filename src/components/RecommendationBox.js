@@ -79,7 +79,7 @@ export default function Recommendation(props) {
                     </div>
                 )}
                 {recomData.ready && recomData.movies.map((movieData, index) => (
-                    <MovieContainer movieData={movieData} />
+                    <MovieContainer movieData={movieData} userName={userName} />
                 ))}
             </div>
         </div>
@@ -88,9 +88,27 @@ export default function Recommendation(props) {
 
 
 function MovieContainer(props) {
-    const { movieData } = props;
+    const { movieData, userName } = props;
+    const { containerState, setState } = useState({
+        paperAsPurple: false,
+        paperAsRed: false,
+        disableButtons: false,
+    })
 
     const handleLikeMovie = (movieId, userId) => {
+        axios.post(
+            `http://${process.env.REACT_APP_BACKEND_URL}/like`, {
+            userId: userId,
+            movieId: movieId,
+        })
+            .then(res => {
+                setState({
+                    paperAsPurple: false,
+                    paperAsRed: true,
+                    disableButtons: true,
+                });
+            })
+            .catch(err => console.log(err))
     }
 
     const handleRemoveMovie = (movieId, userId) => {
@@ -107,6 +125,11 @@ function MovieContainer(props) {
                             numReviews={movieData.ready ? (movieData['reviews_list'] ? movieData['reviews_list'].length : 0) : ''}
                             showLikeButton={true}
                             showDislikeButton={true}
+                            disableButtons={containerState.disableButtons}
+                            paperAsPurple={containerState.paperAsPurple}
+                            paperAsRed={containerState.paperAsRed}
+                            handleLike={() => handleLikeMovie(movieData['_id'], userName)}
+                            handleDislike={() => handleRemoveMovie(movieData['_id'], userName)}
                         />
                     </div>
                     <div style={{ width: "70%", justifyContent: "center", display: "flex", alignItems: "center", padding: '20px 0px 20px 0px', flexDirection: "column" }}>

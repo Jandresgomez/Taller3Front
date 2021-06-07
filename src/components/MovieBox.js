@@ -35,8 +35,8 @@ export default function MovieBox(props) {
 
     const classes = useStyles();
     const defineColor = () => {
-        if (paperAsRed) return '#ffb5b5'
-        if (paperAsPurple) return '#b5b9ff'
+        if (paperAsRed) return '#8f8f8f'
+        if (paperAsPurple) return '#63cf6c'
         return 'white'
     }
 
