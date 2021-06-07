@@ -22,18 +22,12 @@ export default function Recommendation(props) {
     const [recomData, setData] = useState({ ready: false, artists: [] });
 
     const fetchData = () => {
-        axios.get(`http://${process.env.REACT_APP_BACKEND_URL}/api/recommendation/${userName}/`)
+        axios.get(`http://${process.env.REACT_APP_BACKEND_URL}/recommendations/${userName}`)
             .then(res => {
-                var recomUpdate = []
-                if ('iid' in res.data) {
-                    recomUpdate = Object.values(res.data['iid'])
-                } else {
-                    recomUpdate = res.data['results']
-                }
                 setData(prevState => ({
                     ...prevState,
                     ready: true,
-                    artists: recomUpdate,
+                    movies: res.data,
                 }))
             })
             .catch(err => console.log(err))
@@ -49,11 +43,11 @@ export default function Recommendation(props) {
             ready: false,
         }));
         axios.get(
-            `http://${process.env.REACT_APP_BACKEND_URL}/api/push/${userName}/`,
+            `http://${process.env.REACT_APP_BACKEND_URL}/push/${userName}`,
         ).then(res => {
             fetchData();
         })
-        .catch(err => console.log(err))
+            .catch(err => console.log(err))
     }
 
     return (
@@ -84,8 +78,8 @@ export default function Recommendation(props) {
                         <h1>Cargando...</h1>
                     </div>
                 )}
-                {recomData.ready && recomData.artists.map((aid, index) => (
-                    <ArtistContainer aid={aid} userName={userName} />
+                {recomData.ready && recomData.movies.map((movieData, index) => (
+                    <MovieContainer movieData={movieData} />
                 ))}
             </div>
         </div>
@@ -93,116 +87,47 @@ export default function Recommendation(props) {
 }
 
 
-function ArtistContainer(props) {
-    const { aid, userName } = props;
-    const [artistData, setArtistData] = useState({ ready: false });
+function MovieContainer(props) {
+    const { movieData } = props;
 
-    useEffect(() => {
-        axios.get(`http://${process.env.REACT_APP_BACKEND_URL}/api/artist/${aid}/`)
-            .then(res => {
-                setArtistData(prevState => ({
-                    ...prevState,
-                    ready: true,
-                    name: res.data['artist_name'],
-                    worldListens: res.data['total_play'],
-                    songs: res.data['songs'].slice(0, 5),
-                }))
-            })
-            .catch(err => console.log(err));
-    }, []);
-
-    const handleSongPlay = (tid, uid) => {
-        axios.post(
-            `http://${process.env.REACT_APP_BACKEND_URL}/api/play/`,
-            {
-                user_id: uid,
-                track_id: tid,
-            })
-            .catch(err => console.log(err))
-        setArtistData(prevState => ({
-            ...prevState,
-            worldListens: prevState.worldListens + 1
-        }))
+    const handleLikeMovie = (movieId, userId) => {
     }
 
-
-    if (artistData.ready) {
-        return (
-            <div style={{ paddingTop: '75px' }}>
-                <Paper elevation={5} square style={{ height: '40%' }}>
-                    <div style={{ justifyContent: "space-evenly", display: "flex", alignItems: "center", padding: '20px 0px 20px 0px' }}>
-                        <div style={{ maxWidth: "20%", maxHeight: "60%" }}>
-                            <ArtistHomeWrapper aid={aid} artistName={artistData.name} userName={userName} plays={artistData.worldListens}/>
-                        </div>
-                        <div style={{ width: "70%", flexDirection: "column" }}>
-                            {artistData.songs.map((song) => {
-                                return (
-                                    <div style={{ padding: '15px 0px 15px 0px' }}>
-                                        <Song songName={song['track_name']} onPlay={() => handleSongPlay(song['track_id'], userName)} />
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </div>
-                </Paper>
-            </div>
-        );
-    } else {
-        return (<div></div>);
+    const handleRemoveMovie = (movieId, userId) => {
     }
-}
 
-function ArtistHomeWrapper(props) {
-    const { aid, plays, userName, artistName } = props;
-    const [artistState, setState] = useState({
-        paperAsPurple: false,
-        paperAsRed: false,
-        disableButtons: false,
-    })
-
-    const handleDislikeArtist = (aid, userName) => {
-        axios.post(
-            `http://${process.env.REACT_APP_BACKEND_URL}/api/dislike/`, {
-            user_id: userName,
-            artist_id: aid,
-        })
-            .then(res => {
-                setState({
-                    paperAsPurple: false,
-                    paperAsRed: true,
-                    disableButtons: true,
-                });
-            })
-            .catch(err => console.log(err))
-    };
-
-    const handleLikeArtist = (aid, userName) => {
-        axios.post(
-            `http://${process.env.REACT_APP_BACKEND_URL}/api/like/`, {
-            user_id: userName,
-            artist_id: aid,
-        })
-            .then(res => {
-                setState({
-                    paperAsPurple: true,
-                    paperAsRed: false,
-                    disableButtons: true,
-                });
-            })
-            .catch(err => console.log(err))
-    };
 
     return (
-        <Movie
-            paperAsRed={artistState.paperAsRed}
-            paperAsPurple={artistState.paperAsPurple}
-            disableButtons={artistState.disableButtons}
-            artistName={artistName}
-            numListens={plays}
-            showLikeButton={true}
-            handleLike={() => handleLikeArtist(aid, userName)}
-            showDislikeButton={true}
-            handleDislike={() => handleDislikeArtist(aid, userName)}
-        />
-    )
-};
+        <div style={{ paddingTop: '75px' }}>
+            <Paper elevation={5} square style={{ height: '40%' }}>
+                <div style={{ justifyContent: "space-evenly", display: "flex", alignItems: "center", padding: '20px 0px 20px 0px' }}>
+                    <div style={{ maxWidth: "20%", maxHeight: "60%" }}>
+                        <Movie
+                            movieTitle={movieData['title']}
+                            numReviews={movieData.ready ? (movieData.movie['reviews_list'] ? movieData.movie['reviews_list'].length : 0) : ''}
+                            showLikeButton={true}
+                            showDislikeButton={true}
+                        />
+                    </div>
+                    <div style={{ width: "70%", justifyContent: "center", display: "flex", alignItems: "center", padding: '20px 0px 20px 0px', flexDirection: "column" }}>
+                        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', alignContent: 'center', width: '100%' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignContent: 'center' }}>
+                                <h3>Información basica</h3>
+                                {movieData.movie['year'] ? (<p>Lanzamiento: {movieData.movie['year']}</p>) : undefined}
+                                {movieData.movie['country'] ? (<p>Origen: {movieData.movie['country']}</p>) : undefined}
+                            </div>
+                            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignContent: 'center' }}>
+                                <h3>Actores</h3>
+                                {movieData.movie['actors'].map((el) => (<p>{el}</p>))}
+                            </div>
+                            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignContent: 'center' }}>
+                                <h3>Generos</h3>
+                                {movieData.movie['genres'].map((el) => (<p>{el}</p>))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </Paper>
+        </div>
+    );
+}

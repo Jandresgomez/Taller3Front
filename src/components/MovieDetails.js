@@ -62,7 +62,7 @@ export default function MovieDetails(props) {
     return (
         <div>
             <NavBar
-                labels={['INICIO', 'Lo que he escuchado']}
+                labels={['INICIO', 'Lo que he visto']}
                 buttonRedirections={['/home', '/history']}
                 showLogoutButton={true}
                 logoutCallback={logout}
@@ -74,7 +74,8 @@ export default function MovieDetails(props) {
                         <div style={{ maxWidth: "20%", maxHeight: "80%" }}>
                             <Movie 
                             movieTitle={movieData.ready ? movieData.movie['title'] : ""} 
-                            numReviews={movieData.ready ? (movieData.movie['reviews_list'] ? movieData.movie['reviews_list'].length : 0) : ''} showButton={false} 
+                            numReviews={movieData.ready ? (movieData.movie['reviews_list'] ? movieData.movie['reviews_list'].length : 0) : ''}
+                            showButton={false} 
                             showLikeButton={true}
                             />
                         </div>
