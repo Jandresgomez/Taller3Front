@@ -89,7 +89,7 @@ export default function Recommendation(props) {
 
 function MovieContainer(props) {
     const { movieData, userName } = props;
-    const { containerState, setContainerState } = useState({
+    const { cardData, setContainerState } = useState({
         paperAsPurple: false,
         paperAsRed: false,
         disableButtons: false,
@@ -125,9 +125,9 @@ function MovieContainer(props) {
                             numReviews={movieData.ready ? (movieData['reviews_list'] ? movieData['reviews_list'].length : 0) : ''}
                             showLikeButton={true}
                             showDislikeButton={true}
-                            disableButtons={containerState.disableButtons}
-                            paperAsPurple={containerState.paperAsPurple}
-                            paperAsRed={containerState.paperAsRed}
+                            disableButtons={cardData.disableButtons}
+                            paperAsPurple={cardData.paperAsPurple}
+                            paperAsRed={cardData.paperAsRed}
                             handleLike={() => handleLikeMovie(movieData['_id'], userName)}
                             handleDislike={() => handleRemoveMovie(movieData['_id'], userName)}
                         />
