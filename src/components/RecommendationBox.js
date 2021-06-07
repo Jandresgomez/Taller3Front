@@ -96,43 +96,45 @@ function MovieContainer(props) {
     })
 
     const handleLikeMovie = (movieId, userId) => {
-        setContainerState(prevState => ({
-            ...prevState,
+        setContainerState({
+            paperAsPurple: true,
+            paperAsRed: false,
             disableButtons: true,
-        }));
+        });
         axios.post(
             `http://${process.env.REACT_APP_BACKEND_URL}/like`, {
             userId: userId,
             movieId: movieId,
         })
-            .then(res => {
+            .catch(err => {
+                console.log(err)
                 setContainerState({
-                    paperAsPurple: true,
+                    paperAsPurple: false,
                     paperAsRed: false,
-                    disableButtons: true,
+                    disableButtons: false,
                 });
             })
-            .catch(err => console.log(err))
     }
 
     const handleRemoveMovie = (movieId, userId) => {
-        setContainerState(prevState => ({
-            ...prevState,
+        setContainerState({
+            paperAsPurple: false,
+            paperAsRed: true,
             disableButtons: true,
-        }));
+        });
         axios.post(
             `http://${process.env.REACT_APP_BACKEND_URL}/dislike`, {
             userId: userId,
             movieId: movieId,
         })
-            .then(res => {
+            .catch(err => {
+                console.log(err)
                 setContainerState({
                     paperAsPurple: false,
-                    paperAsRed: true,
-                    disableButtons: true,
+                    paperAsRed: false,
+                    disableButtons: false,
                 });
             })
-            .catch(err => console.log(err))
     }
 
 
