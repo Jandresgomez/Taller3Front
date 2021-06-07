@@ -44,6 +44,11 @@ export default function HistoryList(props) {
             <div style={{ display: "flex", alignItems: "center", flexDirection: "column", margin: '50px', flexWrap: "wrap" }}>
                 <label style={{ fontSize: '3em', padding: '20px 0px 20px 0px' }}> Las peliculas que has visto </label>
                 <div style={{ display: "flex", flexWrap: "wrap", justifyContent: 'center', flexDirection: 'row' }}>
+                    {!historyData.ready &&
+                        (<div>
+                            <h1>Cargando...</h1>
+                        </div>)
+                    }
                     {historyData.movies.reduce((accumulator, movie, index) => {
 
                         const el = (
@@ -67,6 +72,9 @@ export default function HistoryList(props) {
                         return accumulator
                     }, []
                     )}
+                    {historyData.ready && historyData.movies.length == 0 &&
+                        (<h1>No has visto peliculas! 😱🙊</h1>)
+                    }
                     {placeholders.length < itemsPerRow && placeholders.map(() => (
                         <div style={{ flexGrow: "1", padding: '20px 0px 20px 0px', maxWidth: itemWidth, margin: '0px 20px' }}></div>
                     ))}
