@@ -89,7 +89,7 @@ export default function Recommendation(props) {
 
 function MovieContainer(props) {
     const { movieData, userName } = props;
-    const { containerState, setState } = useState({
+    const { containerState, setContainerState } = useState({
         paperAsPurple: false,
         paperAsRed: false,
         disableButtons: false,
@@ -102,7 +102,7 @@ function MovieContainer(props) {
             movieId: movieId,
         })
             .then(res => {
-                setState({
+                setContainerState({
                     paperAsPurple: false,
                     paperAsRed: true,
                     disableButtons: true,
