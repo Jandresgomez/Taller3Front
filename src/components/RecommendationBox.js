@@ -103,8 +103,8 @@ function MovieContainer(props) {
         })
             .then(res => {
                 setContainerState({
-                    paperAsPurple: false,
-                    paperAsRed: true,
+                    paperAsPurple: true,
+                    paperAsRed: false,
                     disableButtons: true,
                 });
             })
@@ -112,6 +112,19 @@ function MovieContainer(props) {
     }
 
     const handleRemoveMovie = (movieId, userId) => {
+        axios.post(
+            `http://${process.env.REACT_APP_BACKEND_URL}/dislike`, {
+            userId: userId,
+            movieId: movieId,
+        })
+            .then(res => {
+                setContainerState({
+                    paperAsPurple: false,
+                    paperAsRed: true,
+                    disableButtons: true,
+                });
+            })
+            .catch(err => console.log(err))
     }
 
 
