@@ -28,7 +28,7 @@ export default function MovieDetails(props) {
     const { logout, userName } = props;
     const [movieData, setMovieData] = useState({ ready: false });
     const [cardData, setContainerState] = useState({
-        paperAsPurple: true,
+        paperAsPurple: false,
         disableButtons: false,
     })
 
