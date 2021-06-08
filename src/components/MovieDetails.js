@@ -86,7 +86,7 @@ export default function MovieDetails(props) {
                             disableButtons={cardData.disableButtons}
                             paperAsPurple={cardData.paperAsPurple}
                             showLikeButton={true}
-                            handleLike={() => handleLikeMovie(movieData['_id'], userName)}
+                            handleLike={() => handleLikeMovie(movieData.movie['_id'], userName)}
                             />
                         </div>
                         <div style={{ width: "70%", justifyContent: "center", display: "flex", alignItems: "center", padding: '20px 0px 20px 0px', flexDirection: "column" }}>
