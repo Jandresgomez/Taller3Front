@@ -27,6 +27,10 @@ export default function MovieDetails(props) {
     const { movieId } = useParams();
     const { logout, userName } = props;
     const [movieData, setMovieData] = useState({ ready: false });
+    const [cardData, setContainerState] = useState({
+        paperAsPurple: true,
+        disableButtons: false,
+    })
 
     const fetchArtistData = () => {
         axios.get(`http://${process.env.REACT_APP_BACKEND_URL}/movie/${movieId}`)
@@ -40,12 +44,16 @@ export default function MovieDetails(props) {
             .catch(err => console.log(err));
     }
 
-    const handleSongPlay = (tid, uid) => {
+    const handleLikeMovie = (movieId, userId) => {
+        setContainerState({
+            paperAsPurple: true,
+            disableButtons: true,
+        });
         axios.post(
-            `http://${process.env.REACT_APP_BACKEND_URL}/api/play/`,
+            `http://${process.env.REACT_APP_BACKEND_URL}/like`,
             {
-                user_id: uid,
-                track_id: tid,
+                userId: userId,
+                movieId: movieId,
             })
             .catch(err => console.log(err))
         setMovieData(prevState => ({
@@ -75,8 +83,10 @@ export default function MovieDetails(props) {
                             <Movie 
                             movieTitle={movieData.ready ? movieData.movie['title'] : ""} 
                             numReviews={movieData.ready ? (movieData.movie['reviews_list'] ? movieData.movie['reviews_list'].length : 0) : ''}
-                            showButton={false} 
+                            disableButtons={cardData.disableButtons}
+                            paperAsPurple={cardData.paperAsPurple}
                             showLikeButton={true}
+                            handleLike={() => handleLikeMovie(movieData['_id'], userName)}
                             />
                         </div>
                         <div style={{ width: "70%", justifyContent: "center", display: "flex", alignItems: "center", padding: '20px 0px 20px 0px', flexDirection: "column" }}>
